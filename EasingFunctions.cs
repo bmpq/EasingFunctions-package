@@ -1,11 +1,9 @@
-using UnityEngine;
-
 /*
- * Created by C.J. Kimberlin (http://cjkimberlin.com)
+ * Created by C.J. Kimberlin
  * 
  * The MIT License (MIT)
  * 
- * Copyright (c) 2015
+ * Copyright (c) 2019
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +55,9 @@ using UnityEngine;
  * float derivativeValue = derivativeFunc(0, 10, 0.67f);
  */
 
-public class EasingFunction
+using UnityEngine;
+
+public static class EasingFunction
 {
     public enum Ease
     {
@@ -546,7 +546,7 @@ public class EasingFunction
     public static float EaseInOutSineD(float start, float end, float value)
     {
         end -= start;
-        return end * 0.5f * Mathf.PI * Mathf.Cos(Mathf.PI * value);
+        return end * 0.5f * Mathf.PI * Mathf.Sin(Mathf.PI * value);
     }
     public static float EaseInExpoD(float start, float end, float value)
     {
@@ -685,29 +685,7 @@ public class EasingFunction
 
     public static float EaseInElasticD(float start, float end, float value)
     {
-        end -= start;
-
-        float d = 1f;
-        float p = d * .3f;
-        float s;
-        float a = 0;
-
-        if (a == 0f || a < Mathf.Abs(end))
-        {
-            a = end;
-            s = p / 4;
-        }
-        else
-        {
-            s = p / (2 * Mathf.PI) * Mathf.Asin(end / a);
-        }
-
-        float c = 2 * Mathf.PI;
-
-        // From an online derivative calculator, kinda hoping it is right.
-        return ((-a) * d * c * Mathf.Cos((c * (d * (value - 1f) - s)) / p)) / p -
-            5f * NATURAL_LOG_OF_2 * a * Mathf.Sin((c * (d * (value - 1f) - s)) / p) *
-            Mathf.Pow(2f, 10f * (value - 1f) + 1f);
+        return EaseOutElasticD(start, end, 1f - value);
     }
 
     public static float EaseOutElasticD(float start, float end, float value)
@@ -773,6 +751,7 @@ public class EasingFunction
         end -= start;
 
         // Damn... Thanks http://www.derivative-calculator.net/
+        // TODO: And it's a little bit wrong
         return end * (6f * (1f - value) / 5f + 1f) * (-2.2f * Mathf.Pow(1f - value, 1.2f) *
             Mathf.Sin(Mathf.PI * value * (2.5f * value * value * value + 0.2f)) + Mathf.Pow(1f - value, 2.2f) *
             (Mathf.PI * (2.5f * value * value * value + 0.2f) + 7.5f * Mathf.PI * value * value * value) *
